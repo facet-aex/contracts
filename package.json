@@ -1,0 +1,19 @@
+{
+  "name": "@facet/demo-token",
+  "version": "0.1.0",
+  "private": true,
+  "description": "FACET USD testnet-only ERC-20 and EIP-3009 deployment source",
+  "scripts": {
+    "test": "forge test",
+    "build": "forge build",
+    "deploy:fuji": "node scripts/deploy-fuji.mjs"
+  },
+  "engines": {
+    "node": ">=24.12.0 <25"
+  },
+  "packageManager": "npm@11.6.2",
+  "dependencies": {
+    "@openzeppelin/contracts": "5.6.1",
+    "viem": "^2.57.17"
+  }
+}

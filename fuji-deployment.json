@@ -1,0 +1,18 @@
+{
+  "network": "Avalanche Fuji C-Chain",
+  "chainId": 43113,
+  "contractAddress": "0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f",
+  "deployer": "0xd55C6185BA57cF123a6938D48327082fe60917aE",
+  "owner": "0x9Ba67CbB2af751af5e874a7EB57691828F43658e",
+  "demoPayer": "0xFA8cCB3C5145fca08f22675ea740e89B1D3a317f",
+  "transactionHash": "0xb19ab1f7c8e74b487867d1433a3e926a634a7797c0d2e1831e5811512854c5ac",
+  "blockNumber": "60870696",
+  "name": "FACET USD",
+  "symbol": "fUSD",
+  "decimals": 6,
+  "eip712Version": "2",
+  "ownerInitialAtomic": "1000000000",
+  "payerInitialAtomic": "100000000",
+  "totalSupplyAtomic": "1100000000",
+  "verifiedAt": "2026-11-11T03:31:09.418Z"
+}
