@@ -1,8 +1,8 @@
 {
-  "name": "@facet/demo-token",
-  "version": "0.1.0",
+  "name": "@facet/contracts",
+  "version": "0.2.0",
   "private": true,
-  "description": "FACET USD testnet-only ERC-20 and EIP-3009 deployment source",
+  "description": "FACET Avalanche Solidity smart contracts (Foundry): FacetUSD, FacetActorRegistry, FacetFeeSplitAndEscrow, and FacetReceiptLog.",
   "scripts": {
     "test": "forge test",
     "build": "forge build",
