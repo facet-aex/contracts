@@ -14,5 +14,24 @@
   "ownerInitialAtomic": "1000000000",
   "payerInitialAtomic": "100000000",
   "totalSupplyAtomic": "1100000000",
-  "verifiedAt": "2026-11-11T03:31:09.418Z"
+  "verifiedAt": "2026-11-11T03:31:09.418Z",
+  "actorRegistry": {
+    "address": "0xc37c12bcd53a4ba5fd33870cecc74a4ba601e3a2",
+    "transactionHash": "0x34bd25ac6ce0a6e30080b3a99b06a815a3a8335bf91cff1ff39542e92fe377a9",
+    "blockNumber": "61179544",
+    "artifact": "out/FacetActorRegistry.sol/FacetActorRegistry.json"
+  },
+  "feeSplitAndEscrow": {
+    "address": "0xc50cb5d5ff6c71eb1b065971c198a9edb0ecff06",
+    "transactionHash": "0xbe8107150197e5241fd31c494f968ae59d61e9b56f33224513772a836620af79",
+    "blockNumber": "61179547",
+    "artifact": "out/FacetFeeSplitAndEscrow.sol/FacetFeeSplitAndEscrow.json"
+  },
+  "receiptLog": {
+    "address": "0x5dc611b5642c306dd50fa7f786194dc04bd12fa7",
+    "transactionHash": "0x676f08378130a42987eeaac32a4ff125f87cd98d1401179e179017a08ba0b899",
+    "blockNumber": "61179577",
+    "artifact": "out/FacetReceiptLog.sol/FacetReceiptLog.json"
+  },
+  "facetContractsVerifiedAt": "2026-11-16T14:19:36.690Z"
 }

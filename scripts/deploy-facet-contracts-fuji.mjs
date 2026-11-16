@@ -34,7 +34,7 @@ if (await publicClient.getBalance({ address: account.address }) < 10_000_000_000
 
 const artifacts = [
   { key: 'actorRegistry', contract: 'FacetActorRegistry', args: [registryOwner], checks: { owner: registryOwner } },
-  { key: 'feeSplitAndEscrow', contract: 'FacetFeeSplitAndEscrow', args: [tokenAddress, treasury, 500, runnerSigner, operator], checks: { token: tokenAddress, platformTreasury: treasury, platformFeeBps: 500n, runnerSigner, settlementOperator: operator } },
+  { key: 'feeSplitAndEscrow', contract: 'FacetFeeSplitAndEscrow', args: [tokenAddress, treasury, 500, runnerSigner, operator], checks: { token: tokenAddress, platformTreasury: treasury, platformFeeBps: 500, runnerSigner, settlementOperator: operator } },
   { key: 'receiptLog', contract: 'FacetReceiptLog', args: [runnerSigner, recorder], checks: { runnerSigner, recorder } },
 ];
 
