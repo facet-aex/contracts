@@ -33,5 +33,13 @@
     "blockNumber": "61179577",
     "artifact": "out/FacetReceiptLog.sol/FacetReceiptLog.json"
   },
+  "demoAgentIdentity": {
+    "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "tokenId": "304",
+    "owner": "0x5189c4C1a14Dc1a6845425B6C44D2B40c0b4f39B",
+    "agentWallet": "0x5189c4C1a14Dc1a6845425B6C44D2B40c0b4f39B",
+    "registerTransactionHash": "0xff1db7bc5f41f4bdd54f40c384b1173247a7f00b7ac26dcdc70a2ff023273f0c",
+    "metadataTransactionHash": "0x9122611b105e81cbfb7dd225bf3579b164fb58b95d26c7e947037842c8603c87"
+  },
   "facetContractsVerifiedAt": "2026-11-16T14:19:36.690Z"
 }
