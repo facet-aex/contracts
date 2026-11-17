@@ -41,5 +41,28 @@
     "registerTransactionHash": "0xff1db7bc5f41f4bdd54f40c384b1173247a7f00b7ac26dcdc70a2ff023273f0c",
     "metadataTransactionHash": "0x9122611b105e81cbfb7dd225bf3579b164fb58b95d26c7e947037842c8603c87"
   },
+  "demoFacets": {
+    "vn-gold-fx-actor": {
+      "facetId": "01a1e97a-90e0-7030-b565-91c9abc3857b",
+      "versionId": "01a1e97a-90e0-7038-b9ff-4f8d2a599e04",
+      "imageDigest": "sha256:e3851e74e368a05b51d68f7e3923d905a4bc569ced2306cc397e161388c470dd",
+      "registryTransactionHash": "0x7c35e44145f1dc79c55a0da54080964f537be17ca15a5766013c91a73c1426f2",
+      "registryBlockNumber": "61235044"
+    },
+    "vn-tech-news-actor": {
+      "facetId": "01a1e97b-a5d1-7c25-9a05-4e0e7405d445",
+      "versionId": "01a1e97b-a5d1-7c2d-a50a-7f231c809d73",
+      "imageDigest": "sha256:a1704bcec22586cba42100be2609b21362b4a17a6982508a6bf8cca5cf061731",
+      "registryTransactionHash": "0xc131a66dddb034d182e51e813eac7ba183fba0b161fdfec407b5d26e83d2306a",
+      "registryBlockNumber": "61235049"
+    },
+    "vn-market-analyst-agent": {
+      "facetId": "01a1e97c-61c5-769b-b1b4-cbe2ceaa5591",
+      "versionId": "01a1e97c-61c5-76a8-a715-94bef1a1eee0",
+      "erc8004TokenId": "304",
+      "registryTransactionHash": "0x16144b34bd02b10a28124dd5b811da1855c666585b0fa9c0ea1b8b1ed7cd1916",
+      "registryBlockNumber": "61235055"
+    }
+  },
   "facetContractsVerifiedAt": "2026-11-16T14:19:36.690Z"
 }
