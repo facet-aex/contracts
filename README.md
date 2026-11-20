@@ -1,26 +1,30 @@
 # FACET Smart Contracts (`@facet/contracts`)
 
-Foundry Solidity smart-contract suite for FACET on **Avalanche Fuji C-Chain (`43113`)** under [ADR-0015](../docs/architecture/decisions/ADR-0015-actorbazaar-docker-and-a2a-mvp.md).
+[![FACET](https://img.shields.io/badge/FACET-facet.briandev.space-050505?style=flat-square&labelColor=DFFF4F)](https://facet.briandev.space)
+[![Layer](https://img.shields.io/badge/AVALANCHE-SMART%20CONTRACTS-0D0D0D?style=flat-square&labelColor=343434)](https://github.com/facet-aex)
 
-## Contracts
+> Foundry Solidity smart-contract suite powering FACET's capability registry, x402 payment split, escrow, and on-chain receipts on Avalanche.
 
-1. **`src/FacetUSD.sol` (`fUSD`):**
-   - Deployed at `0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f` on Avalanche Fuji.
-   - ERC-20 (`6` decimals) + EIP-3009 `transferWithAuthorization` for x402 payments.
-2. **`src/FacetActorRegistry.sol`:**
-   - On-chain registry storing `facetId`, `facetType` (`API` / `ACTOR` / `AGENT`), `imageDigest`, `schemaURI`, `pricingModel`, `priceAtomic`, `payTo`, and `erc8004TokenId`.
-3. **`src/FacetFeeSplitAndEscrow.sol`:**
-   - Instant creator revenue split (`FeeSplit`) for `PAY_PER_RUN` and runner-signed usage settlement + automatic refund (`TaskEscrow`) for `PAY_PER_RESULT`.
-4. **`src/FacetReceiptLog.sol`:**
-   - Immutable on-chain run receipt log (`inputHash`, `outputHash`, `itemCount`, `paymentTxHash`, `runnerSignature`).
+## Overview
 
-## Commands
+`contracts` contains the on-chain protocol layer for **FACET**, built with Foundry and OpenZeppelin. These contracts anchor capability integrity, execute programmable `fUSD` revenue splits and escrow refunds, and persist verifiable execution receipts on Avalanche.
 
-```sh
-npm ci
-forge test
-forge build
-npm run deploy:fuji
-```
+## Role in FACET
 
-Verified Fuji deployment addresses and transaction hashes are recorded in [fuji-deployment.json](fuji-deployment.json).
+- **`FacetUSD.sol` (`fUSD`):** Six-decimal ERC-20 testnet stablecoin with EIP-3009 `transferWithAuthorization` support for gasless x402 client authorizations.
+- **`FacetActorRegistry.sol`:** On-chain capability registry anchoring `facetId`, `facetType` (`API` / `ACTOR` / `AGENT`), `imageDigest`, `schemaURI`, pricing metadata, `payTo`, and `erc8004TokenId`.
+- **`FacetFeeSplitAndEscrow.sol`:** Settles instant `PAY_PER_RUN` revenue splits (`FeeSplit`) and holds/settles `PAY_PER_RESULT` deposits (`TaskEscrow`) with automatic refunds for unused capacity or failed runs.
+- **`FacetUsageProof.sol` & `FacetReceiptLog.sol`:** Verify EIP-191 runner signatures over usage commitments and record immutable `RunReceiptLogged` proofs on-chain.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Smart Contracts | Solidity `0.8.28`, OpenZeppelin Contracts 5 |
+| Toolchain & Testing | Foundry (`forge`) |
+| Deployment Scripts | Node.js 24, `viem` |
+| Network | Avalanche C-Chain (Fuji `eip155:43113`) |
+
+---
+
+Part of **[FACET](https://facet.briandev.space)** (`facet-aex`) — Federated Agent Capability Exchange & Trust on Avalanche.
