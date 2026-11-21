@@ -22,10 +22,11 @@
     "artifact": "out/FacetActorRegistry.sol/FacetActorRegistry.json"
   },
   "feeSplitAndEscrow": {
-    "address": "0xc50cb5d5ff6c71eb1b065971c198a9edb0ecff06",
-    "transactionHash": "0xbe8107150197e5241fd31c494f968ae59d61e9b56f33224513772a836620af79",
-    "blockNumber": "61179547",
-    "artifact": "out/FacetFeeSplitAndEscrow.sol/FacetFeeSplitAndEscrow.json"
+    "address": "0x8f04b927606a309d2835ed097ba4a37a6b3b0a05",
+    "transactionHash": "0x0d2c6823e93cb9a149b0c877c010133004dc937137915df227cf6189191b80e0",
+    "blockNumber": "61414910",
+    "artifact": "out/FacetFeeSplitAndEscrow.sol/FacetFeeSplitAndEscrow.json",
+    "version": "2"
   },
   "receiptLog": {
     "address": "0x5dc611b5642c306dd50fa7f786194dc04bd12fa7",
@@ -64,5 +65,11 @@
       "registryBlockNumber": "61235055"
     }
   },
-  "facetContractsVerifiedAt": "2026-11-16T14:19:36.690Z"
+  "facetContractsVerifiedAt": "2026-11-21T07:31:19.232Z",
+  "feeSplitAndEscrowV1": {
+    "address": "0xc50cb5d5ff6c71eb1b065971c198a9edb0ecff06",
+    "transactionHash": "0xbe8107150197e5241fd31c494f968ae59d61e9b56f33224513772a836620af79",
+    "blockNumber": "61179547",
+    "artifact": "out/FacetFeeSplitAndEscrow.sol/FacetFeeSplitAndEscrow.json"
+  }
 }
