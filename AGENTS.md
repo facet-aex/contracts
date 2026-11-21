@@ -21,19 +21,21 @@ This standalone Foundry + Solidity repository (`@facet/contracts`, renamed from 
      - `uint256 erc8004TokenId` (tokenId on canonical Fuji ERC-8004 Identity Registry `0x8004A818BFB912233c491871b3d84c89A494BD9e`, `0` if none)
      - `bool active`
    - Emits `FacetRegistered(bytes32 indexed facetId, uint8 facetType, bytes32 imageDigest, uint8 pricingModel, uint256 priceAtomic, address indexed payTo, uint256 erc8004TokenId)` and provides view getters so buyers/agents can verify `imageDigest` and `payTo`.
-3. **`src/FacetFeeSplitAndEscrow.sol` (Instant Creator Payout & `TaskEscrow`):**
-   - Configured with `FacetUSD` (`0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f`), `platformFeeBps` (e.g., `500` = 5%), `platformTreasury`, and `runnerSigner`.
-   - **Canonical Runner Usage Digest (EIP-191):**
-     Both `FacetFeeSplitAndEscrow` and `FacetReceiptLog` verify `runnerSignature` over the exact same digest:
-     `bytes32 usageDigest = keccak256(abi.encodePacked(runId, facetId, inputHash, outputHash, itemCount));`
-     recovered via `ECDSA.recover(MessageHashUtils.toEthSignedMessageHash(usageDigest), runnerSignature) == runnerSigner`
-     (`runId` and `facetId` are `keccak256(bytes(uuid))`; `inputHash` and `outputHash` are raw 32-byte SHA-256 digests).
+3. **`src/FacetFeeSplitAndEscrow.sol` (Instant Creator Payout & `TaskEscrow` v2 — `ADR-0020`):**
+   - Configured with `FacetUSD` (`0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f`), `platformFeeBps` (e.g., `500` = 5%), `platformTreasury`, `runnerSigner`, `settlementOperator`, and `rescueAdmin` (`Ownable2Step`). Uses `EIP712("FacetFeeSplitAndEscrow", "2")` for domain-separated settlement proofs.
+   - **Transfer-Pull Safety (EIP-3009 `receiveWithAuthorization`):**
+     Both `settlePayPerRunWithAuthorization` and `depositEscrowWithAuthorization` pull `fUSD` via `FacetUSD.receiveWithAuthorization(payer, address(this), ...)` instead of `transferWithAuthorization`, ensuring only the contract itself (`msg.sender == address(this)`) can redeem the signed EIP-3009 authorization and closing front-running griefing.
+   - **Canonical Usage Proofs:**
+     - **On-chain Receipt Proof (`FacetReceiptLog`):** EIP-191 signature over `keccak256(abi.encodePacked(runId, facetId, inputHash, outputHash, itemCount))`.
+     - **Domain-Separated Escrow Settlement Proof (`EscrowUsageProof` v2):** EIP-712 typed struct `EscrowUsageProof(bytes32 runId,bytes32 facetId,bytes32 inputHash,bytes32 outputHash,uint256 itemCount)` bound to `FacetFeeSplitAndEscrow` v2 domain `(chainId, address(this))`.
    - **`PAY_PER_RUN` (`FeeSplit`):**
-     Exposes `settlePayPerRunWithAuthorization(bytes32 runId, bytes32 facetId, address payer, address creatorPayTo, uint256 amount, uint256 validAfter, uint256 validBefore, bytes32 nonce, bytes calldata payerSignature)` which pulls `amount` of `fUSD` via `FacetUSD.transferWithAuthorization(payer, address(this), amount, ...)` and immediately transfers `95%` to `creatorPayTo` and `5%` to `platformTreasury`, emitting `FeeSplitSettled(runId, facetId, creatorPayTo, creatorAmount, platformFee)`.
-   - **`PAY_PER_RESULT` (`TaskEscrow`):**
-     - `depositEscrowWithAuthorization(bytes32 runId, bytes32 facetId, address payer, address creatorPayTo, uint256 unitPriceAtomic, uint256 maxAmount, uint256 validAfter, uint256 validBefore, bytes32 nonce, bytes calldata payerSignature)`: pulls `maxAmount` of `fUSD` from `payer` via `FacetUSD.transferWithAuthorization(payer, address(this), maxAmount, ...)` before execution.
-     - `settleEscrow(bytes32 runId, bytes32 inputHash, bytes32 outputHash, uint256 itemCount, bytes calldata runnerSignature)`: verifies `runnerSignature` against `runnerSigner` over `(runId, facetId, inputHash, outputHash, itemCount)`, computes `actualAmount = min(itemCount * unitPriceAtomic, maxAmount)`, splits `actualAmount` between `creatorPayTo` (95%) and `platformTreasury` (5%), and refunds `maxAmount - actualAmount` back to `payer`, emitting `TaskEscrowSettled`.
-     - `refundEscrow(bytes32 runId)`: authorized refund returning `100%` of `maxAmount` to `payer` if execution fails before producing results.
+     Exposes `settlePayPerRunWithAuthorization(bytes32 runId, bytes32 facetId, address payer, address creatorPayTo, uint256 amount, uint256 validAfter, uint256 validBefore, bytes32 nonce, bytes calldata payerSignature)` which pulls `amount` via `receiveWithAuthorization` and immediately transfers `95%` to `creatorPayTo` and `5%` to `platformTreasury`, emitting `FeeSplitSettled(runId, facetId, creatorPayTo, creatorAmount, platformFee)`.
+   - **`PAY_PER_RESULT` (`TaskEscrow` with Bounded Timeout & Permissionless Reclaim):**
+     - `DEFAULT_ESCROW_TIMEOUT = 15 minutes`, `MIN_ESCROW_TIMEOUT = 5 minutes`, `MAX_ESCROW_TIMEOUT = 1 hours`.
+     - `depositEscrowWithAuthorization(..., uint64 timeoutSeconds, bytes calldata payerSignature)` (and compatibility 11-arg overload using `DEFAULT_ESCROW_TIMEOUT`): pulls `maxAmount` via `receiveWithAuthorization`, stores `expiresAt = uint64(block.timestamp + timeout)`, increments `totalEscrowed += maxAmount`, and emits `TaskEscrowOpened`.
+     - `settleEscrow(bytes32 runId, bytes32 inputHash, bytes32 outputHash, uint256 itemCount, bytes calldata escrowSignature)`: callable by `settlementOperator` OR `task.creatorPayTo` **strictly before `task.expiresAt`**, decrements `totalEscrowed -= task.maxAmount`, verifies `escrowSignature`, splits `actualAmount = min(itemCount * unitPriceAtomic, maxAmount)` (`95%` / `5%`), and refunds `maxAmount - actualAmount` to `payer`.
+     - `refundEscrow(bytes32 runId)`: **before `expiresAt`**, only `settlementOperator` may cancel early; **at or after `block.timestamp >= task.expiresAt`**, **any address (permissionless)** can trigger `refundEscrow(runId)` returning `100%` of `task.maxAmount` strictly to `task.payer` and decrementing `totalEscrowed`.
+     - `rescueSurplus(address erc20, address to)` (`onlyOwner`, `Ownable2Step`): sweeps accidental ERC-20 transfers only when `balance > totalEscrowed` (for `fUSD`), never touching active escrow liability.
 4. **`src/FacetReceiptLog.sol` (On-Chain Run Receipt Log):**
    - Stores and emits immutable execution receipts:
      - `recordReceipt(bytes32 runId, bytes32 facetId, bytes32 inputHash, bytes32 outputHash, uint256 itemCount, bytes32 paymentTxHash, bytes calldata runnerSignature)`
