@@ -11,9 +11,9 @@
 
 ## Role in FACET
 
-- **`FacetUSD.sol` (`fUSD`):** Six-decimal ERC-20 testnet stablecoin with EIP-3009 `transferWithAuthorization` support for gasless x402 client authorizations.
+- **`FacetUSD.sol` (`fUSD`):** Six-decimal ERC-20 testnet stablecoin with EIP-3009 `transferWithAuthorization` and `receiveWithAuthorization` support for gasless x402 client authorizations.
 - **`FacetActorRegistry.sol`:** On-chain capability registry anchoring `facetId`, `facetType` (`API` / `ACTOR` / `AGENT`), `imageDigest`, `schemaURI`, pricing metadata, `payTo`, and `erc8004TokenId`.
-- **`FacetFeeSplitAndEscrow.sol`:** Settles instant `PAY_PER_RUN` revenue splits (`FeeSplit`) and holds/settles `PAY_PER_RESULT` deposits (`TaskEscrow`) with automatic refunds for unused capacity or failed runs.
+- **`FacetFeeSplitAndEscrow.sol` (v2):** Settles instant `PAY_PER_RUN` revenue splits (`FeeSplit`) and holds/settles `PAY_PER_RESULT` deposits (`TaskEscrow`) using recipient-bound `receiveWithAuthorization`, EIP-712 domain-separated `EscrowUsageProof` settlement, bounded `expiresAt` deadlines (`15 minutes` default), permissionless post-expiry `refundEscrow`, and `Ownable2Step` surplus recovery (`rescueSurplus`). Deploy script: `scripts/deploy-fee-split-v2-fuji.mjs`.
 - **`FacetUsageProof.sol` & `FacetReceiptLog.sol`:** Verify EIP-191 runner signatures over usage commitments and record immutable `RunReceiptLogged` proofs on-chain.
 
 ## Tech Stack

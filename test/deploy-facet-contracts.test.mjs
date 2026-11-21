@@ -15,3 +15,14 @@ test('deployment refuses to broadcast without a dedicated private key', () => {
     assert.match(run.stderr, /FACET_FUJI_DEPLOYER_PRIVATE_KEY/);
   } finally { rmSync(cwd, { recursive: true, force: true }); }
 });
+
+test('v2 FeeSplit deploy script refuses to broadcast without a dedicated private key', () => {
+  const env = { ...process.env };
+  delete env.FACET_FUJI_DEPLOYER_PRIVATE_KEY;
+  const cwd = mkdtempSync(join(tmpdir(), 'facet-deploy-v2-test-'));
+  try {
+    const run = spawnSync(process.execPath, [resolve('scripts/deploy-fee-split-v2-fuji.mjs')], { cwd, env, encoding: 'utf8' });
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /FACET_FUJI_DEPLOYER_PRIVATE_KEY/);
+  } finally { rmSync(cwd, { recursive: true, force: true }); }
+});
